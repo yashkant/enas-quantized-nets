@@ -23,7 +23,7 @@ Project Setup
 
 #### Setup Script
 
-To run this project you will have to create a new virtualenv with Python3 and install the needed dependencies there. I have written a small bash script [` setup.sh `][16] that you can run and it will create the virtual environment, install the needed dependencies, and would take care of replacing the `base_layer.py` file in your virtual environment's directory. 
+To run this project you will have to create a new virtualenv with Python3 and install the needed dependencies there. I have written a small bash script [` setup.sh `][16] that you can run and it will create the virtual environment, install the needed dependencies, and would take care of replacing the `base_layer.py` file in your virtual environment's Keras installation. 
 
 ```bash 
 
@@ -39,9 +39,9 @@ The weight sharing mechanism works by intializing the weights of the DAG only on
 
 In the [author's code][13], they add these weights to the layers using [`tf.nn module`][9] in Tensorflow which allows the user to set custom weights to a new layer. 
 
-As we are searching in the space of quantized neural networks, and to implement the quantization we use custom keras layers and there is no provision to set resusable weights to these layers. In the custom layer, the weights are defined using `self.add_weight` method which is defined locally in ` ./environment/lib/python3.x/site-packages/keras/engine/base_layer.py ` file the keras installation folder. 
+To implement the quantization we use custom keras layers and there is no provision to set resusable weights for these. After I followed the call stack it turned out that that the needed functionality could be added by tweaking the `self.add_weight` method which is defined now in ` ./environment/lib/python3.x/site-packages/keras/engine/base_layer.py ` file the keras installation folder. 
 
-Now, I tweaked this method slightly so that it allows to set custom weights to the layers. It is definitely not a good idea to do such changes this in your global installation of Keras, and I strongly suggest using a virtual environment for this. 
+I modified this method slightly so that it allows to set custom weights to the layers now. It is definitely not a good idea to do such changes this in your global installation of Keras, and I strongly suggest using a virtual environment for this. 
 
 Please read this [blog][8] to know how the custom Keras layers are written, I have a [separate mini-project][15] which contains code to build these quantized networks, and perhaps it will be a good idea to take a look there before reading the code in this repository. 
 
